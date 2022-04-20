@@ -51,7 +51,7 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 		}
 
 		String errorMessage = String.format(
-				"Lookup with id %s is already registered with lookup class %s and context class %s. It can't be registered with lookup class %s and context class %s.",
+				"Lookup with id %s is already registered with lookup class %s and context class %s. It cannot be queried with lookup class %s and context class %s.",
 				id,
 				storedLookup.lookupClass.getCanonicalName(),
 				storedLookup.contextClass.getCanonicalName(),
