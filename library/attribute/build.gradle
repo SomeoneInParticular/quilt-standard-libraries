@@ -4,5 +4,4 @@ plugins {
 
 qslLibrary {
 	libraryName = "attribute"
-	version = "0.1.0"
 }

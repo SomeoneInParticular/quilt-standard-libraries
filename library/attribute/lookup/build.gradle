@@ -3,11 +3,10 @@ plugins {
 }
 
 qslModule {
-	name = "Quilt Attribute Accessor API"
+	name = "Quilt Attribute Lookup API"
 	moduleName = "attribute_lookup"
 	id = "quilt_attribute_lookup"
-	description = "Quilt API for accessing custom attributes in a standardized way"
-	version = "1.0.0"
+	description = "Quilt APIs for accessing attributes in a standardized way"
 	library = "attribute"
 	moduleDependencies {
 		core {
