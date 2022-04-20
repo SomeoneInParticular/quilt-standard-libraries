@@ -86,6 +86,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void registerSelf(ItemConvertible... items) {
 		for (ItemConvertible itemConvertible : items) {
@@ -100,6 +101,8 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 				throw new IllegalArgumentException(errorMessage);
 			}
 		}
+
+		registerForItems((stack, context) -> (A) stack.getItem(), items);
 	}
 
 	@Override
