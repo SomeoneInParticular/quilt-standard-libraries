@@ -1,9 +1,9 @@
-package org.quiltmc.qsl.access.api;
+package org.quiltmc.qsl.access.custom.api;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.access.impl.ThreadSafeQueryHashMap;
+import org.quiltmc.qsl.access.custom.impl.ThreadSafeQueryHashMap;
 
 import java.util.Map;
 
