@@ -1,9 +1,9 @@
-package org.quiltmc.qsl.access.custom.impl;
+package org.quiltmc.qsl.access.impl.custom;
 
 import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.access.custom.api.ThreadSafeQueryMap;
+import org.quiltmc.qsl.access.api.custom.ThreadSafeQueryMap;
 
 import java.util.Collection;
 import java.util.Map;

@@ -1,8 +1,8 @@
-package org.quiltmc.qsl.access.custom.api;
+package org.quiltmc.qsl.access.api.custom;
 
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.access.custom.impl.AttributeLookupMapImpl;
+import org.quiltmc.qsl.access.impl.custom.AttributeLookupMapImpl;
 
 import java.util.Objects;
 
