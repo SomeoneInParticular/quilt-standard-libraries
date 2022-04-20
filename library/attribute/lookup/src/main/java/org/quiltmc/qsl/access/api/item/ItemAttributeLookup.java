@@ -42,7 +42,7 @@ public interface ItemAttributeLookup<A, C> {
 
 	void registerForItems(ItemAttributeProvider<A, C> provider, ItemConvertible... items);
 
-	void registerFallback(ItemAttributeProvider<A, C> provider, ItemConvertible... items);
+	void registerFallback(ItemAttributeProvider<A, C> provider);
 
 	Identifier getId();
 
