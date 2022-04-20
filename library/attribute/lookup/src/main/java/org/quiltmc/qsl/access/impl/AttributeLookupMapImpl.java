@@ -21,16 +21,16 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 	}
 
 	@Override
-	public synchronized L getLookup(Identifier id, Class<?> lookupClass, Class<?> contextClass) throws IllegalAccessException {
+	public synchronized L getLookup(Identifier id, Class<?> attributeClass, Class<?> contextClass) throws IllegalAccessException {
 		Objects.requireNonNull(id, "Lookup ID may not be null");
-		Objects.requireNonNull(lookupClass, "Attribute class may not be null");
+		Objects.requireNonNull(attributeClass, "Attribute class may not be null");
 		Objects.requireNonNull(contextClass, "Context class may not be null");
 
 		StoredLookup<L> storedLookup = lookups.computeIfAbsent(id,
-				newId -> new StoredLookup<>(lookupConstructor.get(newId, lookupClass, contextClass), lookupClass, contextClass)
+				newId -> new StoredLookup<>(lookupConstructor.get(newId, attributeClass, contextClass), attributeClass, contextClass)
 		);
 
-		if (storedLookup.lookupClass == lookupClass && storedLookup.contextClass == contextClass) {
+		if (storedLookup.lookupClass == attributeClass && storedLookup.contextClass == contextClass) {
 			return storedLookup.accessor;
 		}
 
@@ -39,7 +39,7 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 				id,
 				storedLookup.lookupClass.getCanonicalName(),
 				storedLookup.contextClass.getCanonicalName(),
-				lookupClass.getCanonicalName(),
+				attributeClass.getCanonicalName(),
 				contextClass.getCanonicalName()
 		);
 

@@ -1,6 +1,8 @@
 package org.quiltmc.qsl.access.api;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.access.impl.ThreadSafeQueryHashMap;
 
 import java.util.Map;
@@ -29,5 +31,27 @@ public interface ThreadSafeQueryMap<K, V> extends Map<K, V> {
 		return new ThreadSafeQueryHashMap<>();
 	}
 
-	V putIfAbsent(K key, V value);
+	/**
+	 * If the specified key is not already associated with a provider, associate
+	 * it with this value and return {@code null}
+	 *
+	 * If a value already exists for the specified key, returns that value instead
+	 *
+	 * @throws NullPointerException if the key or value is {@code null}
+	 */
+	@Nullable
+	V putIfAbsent(K key, V value) throws NullPointerException;
+
+	/**
+	 * Add multiple key-value pairs to the map simultaneously, returning a map
+	 * containing the key-value pairs representing elements already present
+	 * within this map.
+	 *
+	 * This should help bypass the very slow write speed of this implementation,
+	 * though this method should still be used sparingly.
+	 *
+	 * @throws NullPointerException if any of the keys or values within the
+	 * provided map are {@code null}
+	 */
+	Map<? extends K, ? extends V> putAllIfAbsent(@NotNull Map<? extends K, ? extends V> m);
 }

@@ -21,9 +21,9 @@ import java.util.Objects;
 @ApiStatus.Experimental
 public interface AttributeLookupMap<L> extends Iterable<L> {
 	/**
-	 * Create a new lookup map for an attribute type
+	 * Create a new lookup map for an attribute type {@code <L>}
 	 *
-	 * @param lookupConstructor The constructor used to create attribute accessor instances
+	 * @param lookupConstructor The constructor used to create attribute lookup instances
 	 */
 	static <L> AttributeLookupMap<L> create(LookupConstructor<L> lookupConstructor) {
 		Objects.requireNonNull(lookupConstructor, "Lookup constructor may not be null");
@@ -31,14 +31,23 @@ public interface AttributeLookupMap<L> extends Iterable<L> {
 		return new AttributeLookupMapImpl<>(lookupConstructor);
 	}
 
-	L getLookup(Identifier id, Class<?> lookupClass, Class<?> contextClass) throws IllegalAccessException;
+	/**
+	 * Retrieves the attribute lookup associated with an identifier
+	 *
+	 * @param id The identifier of the lookup
+	 * @param attributeClass The class of the attribute the lookup handles
+	 * @param contextClass The class of context the lookup requires to function
+	 * @return The unique lookup associated with the parameters above
+	 * @throws IllegalAccessException If on of the arguments is {@code null}
+	 */
+	L getLookup(Identifier id, Class<?> attributeClass, Class<?> contextClass) throws IllegalAccessException;
 
 	@FunctionalInterface
 	interface LookupConstructor<L> {
 		/**
-		 * Create a new attribute accessor.
+		 * Create a new attribute lookup.
 		 *
-		 * @param identifier The identifier for this accessor.
+		 * @param identifier The identifier for this lookup.
 		 * @param attributeClass The attribute class passed to {@link #getLookup}.
 		 * @param contextClass The context class passed to {@link #getLookup}.
 		 */
