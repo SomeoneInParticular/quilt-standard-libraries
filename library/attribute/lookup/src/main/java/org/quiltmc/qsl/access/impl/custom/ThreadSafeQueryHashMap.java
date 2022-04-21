@@ -19,6 +19,7 @@ package org.quiltmc.qsl.access.impl.custom;
 import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.quiltmc.qsl.access.api.custom.ThreadSafeQueryMap;
 
 import java.util.Collection;
@@ -157,19 +158,19 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 
 	@NotNull
 	@Override
-	public Set<K> keySet() {
-		return contents.keySet();
+	public @Unmodifiable Set<K> keySet() {
+		return ReferenceSets.unmodifiable(contents.keySet());
 	}
 
 	@NotNull
 	@Override
-	public Collection<V> values() {
-		return contents.values();
+	public @Unmodifiable Collection<V> values() {
+		return ReferenceCollections.unmodifiable(contents.values());
 	}
 
 	@NotNull
 	@Override
-	public Set<Entry<K, V>> entrySet() {
-		return contents.entrySet();
+	public @Unmodifiable Set<Entry<K, V>> entrySet() {
+		return ObjectSets.unmodifiable(contents.entrySet());
 	}
 }

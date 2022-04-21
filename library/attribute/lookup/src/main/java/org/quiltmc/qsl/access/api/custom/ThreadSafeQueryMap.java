@@ -19,9 +19,12 @@ package org.quiltmc.qsl.access.api.custom;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 import org.quiltmc.qsl.access.impl.custom.ThreadSafeQueryHashMap;
 
+import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A fast thread-safe-on-query copy-on-write map, built to allow for very fast
@@ -70,4 +73,39 @@ public interface ThreadSafeQueryMap<K, V> extends Map<K, V> {
 	 * provided map are {@code null}
 	 */
 	Map<? extends K, ? extends V> putAllIfAbsent(@NotNull Map<? extends K, ? extends V> m);
+
+	/**
+	 * Returns the set of keys tracked by this map. Keys present within this set
+	 * are only those that existed when queried; new keys added after the query
+	 * occurs will not be represented within this set after the query goes through
+	 *
+	 * <p>To preserve the thread-safe-on-query nature of the map, the set
+	 * returned by this method is unmodifiable, and will not have an effect on
+	 * the original backing map it attempted (raising an error instead).
+	 */
+	@Unmodifiable Set<K> keySet();
+
+	/**
+	 * Returns the set of key-value pairs tracked by this map. Entries present
+	 * within this set are only those that existed when queried; new entries added
+	 * after the query occurs will not be represented within this set after the
+	 * query goes through
+	 *
+	 * <p>To preserve the thread-safe-on-query nature of the map, the set
+	 * returned by this method is unmodifiable, and will not have an effect on
+	 * the original backing map it attempted (raising an error instead)
+	 */
+	@Unmodifiable Set<Entry<K, V>> entrySet();
+
+	/**
+	 * Returns a collection of the values tracked by this map. Values present
+	 * within this set are only those that existed when queried; new values added
+	 * after the query occurs will not be represented within this set after the
+	 * query goes through
+	 *
+	 * <p>To preserve the thread-safe-on-query nature of the map, the set
+	 * returned by this method is unmodifiable, and will not have an effect on
+	 * the original backing map it attempted (raising an error instead)
+	 */
+	@Unmodifiable Collection<V> values();
 }
