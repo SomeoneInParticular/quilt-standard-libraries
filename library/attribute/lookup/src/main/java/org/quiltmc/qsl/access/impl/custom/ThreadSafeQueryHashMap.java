@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.BiFunction;
 
 public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 	// The backing map which actually does everything for us
@@ -172,5 +173,12 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 	@Override
 	public @Unmodifiable Set<Entry<K, V>> entrySet() {
 		return ObjectSets.unmodifiable(contents.entrySet());
+	}
+
+	@Override
+	public synchronized void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
+		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
+		newCopy.replaceAll(function);
+		contents = newCopy;
 	}
 }
