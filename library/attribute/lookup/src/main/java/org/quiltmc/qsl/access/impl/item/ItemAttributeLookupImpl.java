@@ -36,7 +36,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 	// The central map managing the item lookups for us
 	private static final AttributeLookupMap<ItemAttributeLookup<?, ?>> LOOKUPS = AttributeLookupMap.create(ItemAttributeLookupImpl::new);
 
-	// The attributes of the lookup
+	// The components of the lookup
 	private final Identifier id;
 	private final Class<A> attributeClass;
 	private final Class<C> contextClass;
