@@ -130,7 +130,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 
 	@Override
 	public void registerFallback(ItemAttributeProvider<A, C> provider) {
-		Objects.requireNonNull(provider);
+		Objects.requireNonNull(provider, "ItemAttributeProvider may not be null");
 
 		fallbackProviders.add(provider);
 	}
