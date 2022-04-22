@@ -46,7 +46,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 	private final List<ItemAttributeProvider<A, C>> fallbackProviders = new CopyOnWriteArrayList<>();
 
 	// A logger to report any not-quite-errors to the user
-	Logger LOGGER = LoggerFactory.getLogger("qsl-attribute-lookup-api/item");
+	private static final Logger LOGGER = LoggerFactory.getLogger("qsl-attribute-lookup-api/item");
 
 	@SuppressWarnings("unchecked")
 	public static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) throws IllegalAccessException {
