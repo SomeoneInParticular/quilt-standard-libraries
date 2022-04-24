@@ -113,7 +113,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 			Item item = itemConvertible.asItem();
 			newEntries.put(item, provider);
 		}));
-		return providerMap.putAllIfAbsent(newEntries);
+		return providerMap.putWhereAbsent(newEntries);
 	}
 
 	@Override

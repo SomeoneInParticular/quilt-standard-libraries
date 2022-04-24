@@ -80,7 +80,7 @@ public interface ThreadSafeQueryMap<K, V> {
 	 * @return A map containing the keys that already existed within the map,
 	 *  and the values they were associated with
 	 */
-	Map<? extends K, ? extends V> putAllIfAbsent(@NotNull Map<? extends K, ? extends V> m);
+	Map<? extends K, ? extends V> putWhereAbsent(@NotNull Map<? extends K, ? extends V> m);
 
 	/**
 	 * Get the unmodifiable view of the contents of this map, which can be used

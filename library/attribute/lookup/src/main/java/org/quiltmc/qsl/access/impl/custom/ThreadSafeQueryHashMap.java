@@ -56,7 +56,7 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 	}
 
 	@Override
-	public synchronized Map<? extends K, ? extends V> putAllIfAbsent(@NotNull Map<? extends K, ? extends V> m) {
+	public synchronized Map<? extends K, ? extends V> putWhereAbsent(@NotNull Map<? extends K, ? extends V> m) {
 		// Make sure no one is trying to sneak a null value past us
 		if (m.containsKey(null)) {
 			String msg = "Null keys cannot be written to a ThreadSafeQueryHashMap";
