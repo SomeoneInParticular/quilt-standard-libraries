@@ -133,7 +133,7 @@ public interface ItemAttributeLookup<A, C> {
 		 * @param itemStack The item stack to query the attribute from.
 		 * @param context Additional context passed to the query.
 		 * @return An attribute of type {@code A}, or {@code null} if no
-		 * attribute if found.
+		 *  attribute was found.
 		 */
 		@Nullable
 		A find(ItemStack itemStack, C context);
