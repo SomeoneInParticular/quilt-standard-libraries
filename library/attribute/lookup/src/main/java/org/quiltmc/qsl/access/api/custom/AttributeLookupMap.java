@@ -54,9 +54,9 @@ public interface AttributeLookupMap<L> extends Iterable<L> {
 	 * @param attributeClass The class of the attribute the lookup handles
 	 * @param contextClass The class of context the lookup requires to function
 	 * @return The unique lookup associated with the parameters above
-	 * @throws IllegalAccessException if one of the arguments is {@code null}
+	 * @throws IllegalArgumentException if one of the arguments is {@code null}
 	 */
-	L getLookup(Identifier id, Class<?> attributeClass, Class<?> contextClass) throws IllegalAccessException;
+	L getLookup(Identifier id, Class<?> attributeClass, Class<?> contextClass) throws IllegalArgumentException;
 
 	@FunctionalInterface
 	interface LookupConstructor<L> {
