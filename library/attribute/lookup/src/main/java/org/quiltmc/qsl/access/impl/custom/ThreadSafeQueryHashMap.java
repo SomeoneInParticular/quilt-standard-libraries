@@ -69,8 +69,8 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 		// Put the contents into the map, filtering out entries which already exist within it
 		IdentityHashMap<K, V> returnMap = new IdentityHashMap<>();
 		IdentityHashMap<K, V> newCopy = new IdentityHashMap<>(Math.max(contents.size(), m.size()));
-		newCopy.putAll(m);
-		for (Map.Entry<K, V> entry : contents.entrySet()) {
+		newCopy.putAll(contents);
+		for (Map.Entry<? extends K, ? extends V> entry : m.entrySet()) {
 			K key = entry.getKey();
 			// Only add entries if they are associated with new keys
 			if (!newCopy.containsKey(key)) {
