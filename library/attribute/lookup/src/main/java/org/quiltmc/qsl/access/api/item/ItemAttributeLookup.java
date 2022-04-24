@@ -70,8 +70,8 @@ public interface ItemAttributeLookup<A, C> {
 	 * @param items The item types to associate with the Attribute type
 	 * @return A map containing the items already registered in the map, and
 	 *  the providers they are associated with.
-	 * @throws IllegalArgumentException if the Attribute is not assignable from
-	 *  the class of one of the items provided
+	 * @throws IllegalArgumentException if the {@code Attribute} is not
+	 *  assignable from the class of one of the items provided
 	 */
 	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) throws IllegalArgumentException;
 
