@@ -39,10 +39,10 @@ public interface ItemAttributeLookup<A, C> {
 	 * @param attributeClass The attribute class the lookup should query for
 	 * @param contextClass The context required for the lookup to query successfully
 	 * @return The unique lookup associated with the specified identifier
-	 * @throws IllegalAccessException If a lookup with matching the identifier
+	 * @throws IllegalArgumentException If a lookup with matching the identifier
 	 *  exists, but for an incorrect {@code attributeClass} or {@code contextClass}
 	 */
-	static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) throws IllegalAccessException {
+	static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) throws IllegalArgumentException {
 		return ItemAttributeLookupImpl.get(id, attributeClass, contextClass);
 	}
 
