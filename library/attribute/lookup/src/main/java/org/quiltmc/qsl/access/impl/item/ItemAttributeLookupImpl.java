@@ -81,7 +81,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) {
+	public Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) throws IllegalArgumentException {
 		for (ItemConvertible itemConvertible : items) {
 			Item item = itemConvertible.asItem();
 			// Raise an error if the item-like objects are not compatible with the attribute class

@@ -73,7 +73,7 @@ public interface ItemAttributeLookup<A, C> {
 	 * @throws IllegalArgumentException if the Attribute is not assignable from
 	 *                                  the class of one of the items provided
 	 */
-	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items);
+	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) throws IllegalArgumentException;
 
 	/**
 	 * Mark specified items as being capable of holding a specific attribute,
