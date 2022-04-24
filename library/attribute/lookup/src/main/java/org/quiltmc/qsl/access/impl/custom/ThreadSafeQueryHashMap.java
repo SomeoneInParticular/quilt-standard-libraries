@@ -16,65 +16,29 @@
 
 package org.quiltmc.qsl.access.impl.custom;
 
-import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.quiltmc.qsl.access.api.custom.ThreadSafeQueryMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
-import java.util.function.BiFunction;
 
 public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
+	// A logger to report any not-quite-errors to the user
+	private static final Logger LOGGER = LoggerFactory.getLogger("qsl-attribute-lookup-api");
+
 	// The backing map which actually does everything for us
-	private volatile Reference2ReferenceMap<K, V> contents = new Reference2ReferenceOpenHashMap<>();
+	private volatile Map<K, V> contents = Collections.emptyMap();
 
 	@Override
-	public int size() {
-		return contents.size();
-	}
-
-	@Override
-	public boolean isEmpty() {
-		return contents.isEmpty();
-	}
-
-	@Override
-	public boolean containsKey(Object key) {
-		Objects.requireNonNull(key, "Key may not be null");
-
-		return contents.containsKey(key);
-	}
-
-	@Override
-	public boolean containsValue(Object value) {
-		Objects.requireNonNull(value, "Value may not be null");
-
-		return contents.containsValue(value);
-	}
-
-	@Override
-	public V get(Object key) {
+	public V get(K key) {
 		Objects.requireNonNull(key, "Key may not be null");
 
 		return contents.get(key);
-	}
-
-	@Nullable
-	@Override
-	public synchronized V put(K key, V value) {
-		Objects.requireNonNull(key, "Key may not be null");
-		Objects.requireNonNull(value, "Value may not be null");
-
-		// Copy-on-write to avoid collision when read or write is occurring simultaneously
-		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
-		V result = newCopy.put(key, value);
-		contents = newCopy;
-
-		return result;
 	}
 
 	@Override
@@ -83,40 +47,12 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 		Objects.requireNonNull(value, "Value may not be null");
 
 		// Copy-on-write to avoid collision when read or write is occurring simultaneously
-		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
+		IdentityHashMap<K, V> newCopy = new IdentityHashMap<>(contents.size()+1);
+		newCopy.putAll(contents);
 		V result = newCopy.putIfAbsent(key, value);
-		contents = newCopy;
+		contents = Collections.unmodifiableMap(newCopy);
 
 		return result;
-	}
-
-	@Override
-	public synchronized V remove(Object key) {
-		Objects.requireNonNull(key, "Key may not be null");
-
-		// Copy-on-write to avoid collision when read or write is occurring simultaneously
-		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
-		V result = newCopy.remove(key);
-		contents = newCopy;
-
-		return result;
-	}
-
-	@Override
-	public synchronized void putAll(@NotNull Map<? extends K, ? extends V> m) {
-		// Make sure no one is trying to sneak a null value past us
-		if (m.containsKey(null)) {
-			String msg = "Null keys cannot be written to a ThreadSafeQueryHashMap";
-			throw new NullPointerException(msg);
-		} else if (m.containsValue(null)) {
-			String msg = "Null values cannot be written to a ThreadSafeQueryHashMap";
-			throw new NullPointerException(msg);
-		}
-
-		// Copy-on-write to avoid collision when read or write is occurring simultaneously
-		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
-		newCopy.putAll(m);
-		contents = newCopy;
 	}
 
 	@Override
@@ -131,9 +67,10 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 		}
 
 		// Put the contents into the map, filtering out entries which already exist within it
-		Reference2ReferenceMap<K, V> returnMap = new Reference2ReferenceOpenHashMap<>();
-		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
-		for (Reference2ReferenceMap.Entry<K, V> entry : Reference2ReferenceMaps.fastIterable(contents)) {
+		IdentityHashMap<K, V> returnMap = new IdentityHashMap<>();
+		IdentityHashMap<K, V> newCopy = new IdentityHashMap<>(Math.max(contents.size(), m.size()));
+		newCopy.putAll(m);
+		for (Map.Entry<K, V> entry : contents.entrySet()) {
 			K key = entry.getKey();
 			// Only add entries if they are associated with new keys
 			if (!newCopy.containsKey(key)) {
@@ -143,42 +80,21 @@ public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 			else {
 				V value = newCopy.get(key);
 				returnMap.put(key, value);
+				String msg = String.format(
+						"Tried to register an attribute provider for key '%s' where one already exists. New entry was ignored.",
+						key
+				);
+				LOGGER.warn(msg);
 			}
 		}
 
 		// Tidy up with the re-assignment and return
-		contents = newCopy;
+		contents = Collections.unmodifiableMap(newCopy);
 		return returnMap;
 	}
 
 	@Override
-	public synchronized void clear() {
-		// Copy-on-write to avoid collision when read or write is occurring simultaneously
-		contents = new Reference2ReferenceOpenHashMap<>();
-	}
-
-	@NotNull
-	@Override
-	public @Unmodifiable Set<K> keySet() {
-		return ReferenceSets.unmodifiable(contents.keySet());
-	}
-
-	@NotNull
-	@Override
-	public @Unmodifiable Collection<V> values() {
-		return ReferenceCollections.unmodifiable(contents.values());
-	}
-
-	@NotNull
-	@Override
-	public @Unmodifiable Set<Entry<K, V>> entrySet() {
-		return ObjectSets.unmodifiable(contents.entrySet());
-	}
-
-	@Override
-	public synchronized void replaceAll(BiFunction<? super K, ? super V, ? extends V> function) {
-		Reference2ReferenceMap<K, V> newCopy = new Reference2ReferenceOpenHashMap<>(contents);
-		newCopy.replaceAll(function);
-		contents = newCopy;
+	public @Unmodifiable Map<K, V> getBackingMap() {
+		return contents;
 	}
 }

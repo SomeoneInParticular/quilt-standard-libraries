@@ -20,16 +20,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.access.api.custom.AttributeLookupMap;
 import org.quiltmc.qsl.access.api.custom.ThreadSafeQueryMap;
 import org.quiltmc.qsl.access.api.item.ItemAttributeLookup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> {
@@ -44,9 +40,6 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 	// Provider tracking objects, both for "ideal" and fallback cases
 	private final ThreadSafeQueryMap<Item, ItemAttributeProvider<A, C>> providerMap = ThreadSafeQueryMap.create();
 	private final List<ItemAttributeProvider<A, C>> fallbackProviders = new CopyOnWriteArrayList<>();
-
-	// A logger to report any not-quite-errors to the user
-	private static final Logger LOGGER = LoggerFactory.getLogger("qsl-attribute-lookup-api/item");
 
 	@SuppressWarnings("unchecked")
 	public static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) throws IllegalAccessException {
@@ -88,7 +81,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void registerSelf(ItemConvertible... items) {
+	public Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) {
 		for (ItemConvertible itemConvertible : items) {
 			Item item = itemConvertible.asItem();
 			// Raise an error if the item-like objects are not compatible with the attribute class
@@ -102,11 +95,11 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 			}
 		}
 
-		registerForItems((stack, context) -> (A) stack.getItem(), items);
+		return registerForItems((stack, context) -> (A) stack.getItem(), items);
 	}
 
 	@Override
-	public void registerForItems(ItemAttributeProvider<A, C> provider, ItemConvertible... items) {
+	public Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerForItems(ItemAttributeProvider<A, C> provider, ItemConvertible... items) {
 		// Sanity check some requirements for the to-be-registered items
 		Objects.requireNonNull(provider, "ItemApiProvider may not be null");
 
@@ -115,17 +108,12 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 		}
 
 		// Register the new item/attribute-providers, skipping over duplicates
-		for (ItemConvertible itemConvertible : items) {
+		Map<Item, ItemAttributeProvider<A, C>> newEntries = new HashMap<>(items.length);
+		Arrays.stream(items).forEach((itemConvertible -> {
 			Item item = itemConvertible.asItem();
-			Objects.requireNonNull(item, "ItemConvertable should not produce a null value when registering them with an ItemAttributeProvider");
-			if (providerMap.putIfAbsent(item, provider) != null) {
-				String msg = String.format(
-						"Tried to register an attribute provider for item '%s' where one already exists. New entry was ignored.",
-						Registry.ITEM.getId(item)
-				);
-				LOGGER.warn(msg);
-			}
-		}
+			newEntries.put(item, provider);
+		}));
+		return providerMap.putAllIfAbsent(newEntries);
 	}
 
 	@Override

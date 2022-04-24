@@ -22,9 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.quiltmc.qsl.access.impl.custom.ThreadSafeQueryHashMap;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * A fast thread-safe-on-query copy-on-write map, built to allow for very fast
@@ -42,13 +40,21 @@ import java.util.Set;
  * @param <V> The value type of the map
  */
 @ApiStatus.Experimental
-public interface ThreadSafeQueryMap<K, V> extends Map<K, V> {
+public interface ThreadSafeQueryMap<K, V> {
 	/**
 	 * Create a new instance, defaulting to a HashMap implementation
 	 */
 	static <K, V> ThreadSafeQueryMap<K, V> create() {
 		return new ThreadSafeQueryHashMap<>();
 	}
+
+	/**
+	 * Return the provider associated with the specified key within this map,
+	 * if one exists. Otherwise returns {@code null}
+	 *
+	 * @throws NullPointerException if the key is null
+	 */
+	V get(K key) throws NullPointerException;
 
 	/**
 	 * If the specified key is not already associated with a provider, associate
@@ -71,41 +77,14 @@ public interface ThreadSafeQueryMap<K, V> extends Map<K, V> {
 	 *
 	 * @throws NullPointerException if any of the keys or values within the
 	 * provided map are {@code null}
+	 * @return A map containing the keys that already existed within the map,
+	 *  and the values they were associated with
 	 */
 	Map<? extends K, ? extends V> putAllIfAbsent(@NotNull Map<? extends K, ? extends V> m);
 
 	/**
-	 * Returns the set of keys tracked by this map. Keys present within this set
-	 * are only those that existed when queried; new keys added after the query
-	 * occurs will not be represented within this set after the query goes through
-	 *
-	 * <p>To preserve the thread-safe-on-query nature of the map, the set
-	 * returned by this method is unmodifiable, and will not have an effect on
-	 * the original backing map it attempted (raising an error instead).
+	 * Get the unmodifiable view of the contents of this map, which can be used
+	 * in methods that require an object implementing the {@link Map} interface
 	 */
-	@Unmodifiable Set<K> keySet();
-
-	/**
-	 * Returns the set of key-value pairs tracked by this map. Entries present
-	 * within this set are only those that existed when queried; new entries added
-	 * after the query occurs will not be represented within this set after the
-	 * query goes through
-	 *
-	 * <p>To preserve the thread-safe-on-query nature of the map, the set
-	 * returned by this method is unmodifiable, and will not have an effect on
-	 * the original backing map it attempted (raising an error instead)
-	 */
-	@Unmodifiable Set<Entry<K, V>> entrySet();
-
-	/**
-	 * Returns a collection of the values tracked by this map. Values present
-	 * within this set are only those that existed when queried; new values added
-	 * after the query occurs will not be represented within this set after the
-	 * query goes through
-	 *
-	 * <p>To preserve the thread-safe-on-query nature of the map, the set
-	 * returned by this method is unmodifiable, and will not have an effect on
-	 * the original backing map it attempted (raising an error instead)
-	 */
-	@Unmodifiable Collection<V> values();
+	@Unmodifiable Map<K, V> getBackingMap();
 }

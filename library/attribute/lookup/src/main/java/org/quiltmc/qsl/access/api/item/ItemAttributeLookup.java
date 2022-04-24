@@ -23,6 +23,8 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.quiltmc.qsl.access.impl.item.ItemAttributeLookupImpl;
 
+import java.util.Map;
+
 /**
  * A standard API for managing attribute lookup, for attributes bound to
  * item stacks.
@@ -66,25 +68,29 @@ public interface ItemAttributeLookup<A, C> {
 	 * associated with this Lookup, for querying via this Lookup
 	 *
 	 * @param items The item types to associate with the Attribute type
-	 * @throws IllegalArgumentException IF the Attribute is not assignable from
-	 *  the class of one of the items provided
+	 * @return A map containing the items already registered in the map, and
+	 *  the providers they are associated with.
+	 * @throws IllegalArgumentException if the Attribute is not assignable from
+	 *                                  the class of one of the items provided
 	 */
-	void registerSelf(ItemConvertible... items);
+	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items);
 
 	/**
 	 * Mark specified items as being capable of holding a specific attribute,
 	 * to be handled using the specified {@code ItemAttributeProvider}
 	 *
 	 * @param provider The provider to register with
-	 * @param items The items to register
+	 * @param items    The items to register
+	 * @return A map containing the items and their associated providers for
+	 *  items already registered within the map
 	 */
-	void registerForItems(ItemAttributeProvider<A, C> provider, ItemConvertible... items);
+	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerForItems(ItemAttributeProvider<A, C> provider, ItemConvertible... items);
 
 	/**
 	 * Register a provider to be used when a standard provider cannot be found
 	 * with a provided item. Providers registered this way are checked for all
 	 * queries which fail to a provider for the requested item via the usual way
-	 * @param provider The provider
+	 * @param provider The provider to register
 	 */
 	void registerFallback(ItemAttributeProvider<A, C> provider);
 
