@@ -65,7 +65,7 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 	@NotNull
 	@Override
 	public synchronized Iterator<L> iterator() {
-		return lookups.values().stream().map(storedLookup -> storedLookup.accessor).iterator();
+		return lookups.values().stream().map(storedLookup -> storedLookup.accessor).toList().iterator();
 	}
 
 	private record StoredLookup<L>(L accessor, Class<?> attributeClass, Class<?> contextClass) {}
