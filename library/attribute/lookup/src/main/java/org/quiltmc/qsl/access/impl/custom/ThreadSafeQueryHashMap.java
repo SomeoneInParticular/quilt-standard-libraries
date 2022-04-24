@@ -29,7 +29,7 @@ import java.util.Objects;
 
 public class ThreadSafeQueryHashMap<K, V> implements ThreadSafeQueryMap<K, V> {
 	// A logger to report any not-quite-errors to the user
-	private static final Logger LOGGER = LoggerFactory.getLogger("qsl-attribute-lookup-api");
+	private static final Logger LOGGER = LoggerFactory.getLogger("quilt-attribute-lookup");
 
 	// The backing map which actually does everything for us
 	private volatile Map<K, V> contents = Collections.emptyMap();
