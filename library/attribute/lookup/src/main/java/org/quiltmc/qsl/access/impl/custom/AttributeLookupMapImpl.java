@@ -37,7 +37,7 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 	}
 
 	@Override
-	public synchronized L getLookup(Identifier id, Class<?> attributeClass, Class<?> contextClass) throws IllegalArgumentException {
+	public synchronized L getLookup(Identifier id, Class<?> attributeClass, Class<?> contextClass) {
 		Objects.requireNonNull(id, "Lookup ID may not be null");
 		Objects.requireNonNull(attributeClass, "Attribute class may not be null");
 		Objects.requireNonNull(contextClass, "Context class may not be null");

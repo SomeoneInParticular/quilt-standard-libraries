@@ -42,7 +42,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 	private final List<ItemAttributeProvider<A, C>> fallbackProviders = new CopyOnWriteArrayList<>();
 
 	@SuppressWarnings("unchecked")
-	public static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) throws IllegalArgumentException {
+	public static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) {
 		return (ItemAttributeLookup<A, C>) LOOKUPS.getLookup(id, attributeClass, contextClass);
 	}
 
@@ -81,7 +81,7 @@ public class ItemAttributeLookupImpl<A, C> implements ItemAttributeLookup<A, C> 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) throws IllegalArgumentException {
+	public Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) {
 		for (ItemConvertible itemConvertible : items) {
 			Item item = itemConvertible.asItem();
 			// Raise an error if the item-like objects are not compatible with the attribute class

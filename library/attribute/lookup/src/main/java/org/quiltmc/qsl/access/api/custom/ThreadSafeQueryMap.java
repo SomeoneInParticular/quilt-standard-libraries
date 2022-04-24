@@ -54,7 +54,7 @@ public interface ThreadSafeQueryMap<K, V> {
 	 *
 	 * @throws NullPointerException if the key is null
 	 */
-	V get(K key) throws NullPointerException;
+	V get(K key);
 
 	/**
 	 * If the specified key is not already associated with a provider, associate
@@ -65,7 +65,7 @@ public interface ThreadSafeQueryMap<K, V> {
 	 * @throws NullPointerException if the key or value is {@code null}
 	 */
 	@Nullable
-	V putIfAbsent(K key, V value) throws NullPointerException;
+	V putIfAbsent(K key, V value);
 
 	/**
 	 * Add multiple key-value pairs to the map simultaneously, returning a map

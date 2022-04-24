@@ -42,7 +42,7 @@ public interface ItemAttributeLookup<A, C> {
 	 * @throws IllegalArgumentException If a lookup with matching the identifier
 	 *  exists, but for an incorrect {@code attributeClass} or {@code contextClass}
 	 */
-	static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) throws IllegalArgumentException {
+	static <A, C> ItemAttributeLookup<A, C> get(Identifier id, Class<A> attributeClass, Class<C> contextClass) {
 		return ItemAttributeLookupImpl.get(id, attributeClass, contextClass);
 	}
 
@@ -73,7 +73,7 @@ public interface ItemAttributeLookup<A, C> {
 	 * @throws IllegalArgumentException if the {@code Attribute} is not
 	 *  assignable from the class of one of the items provided
 	 */
-	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items) throws IllegalArgumentException;
+	Map<? extends Item, ? extends ItemAttributeProvider<A, C>> registerSelf(ItemConvertible... items);
 
 	/**
 	 * Mark specified items as being capable of holding a specific attribute,
