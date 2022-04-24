@@ -51,10 +51,8 @@ public interface ThreadSafeQueryMap<K, V> {
 	/**
 	 * Return the provider associated with the specified key within this map,
 	 * if one exists. Otherwise returns {@code null}
-	 *
-	 * @throws NullPointerException if the key is null
 	 */
-	V get(K key) throws NullPointerException;
+	V get(K key);
 
 	/**
 	 * If the specified key is not already associated with a provider, associate
