@@ -46,14 +46,14 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 				newId -> new StoredLookup<>(lookupConstructor.get(newId, attributeClass, contextClass), attributeClass, contextClass)
 		);
 
-		if (storedLookup.lookupClass == attributeClass && storedLookup.contextClass == contextClass) {
+		if (storedLookup.attributeClass == attributeClass && storedLookup.contextClass == contextClass) {
 			return storedLookup.accessor;
 		}
 
 		String errorMessage = String.format(
 				"Lookup with id %s is already registered with lookup class %s and context class %s. It cannot be queried with lookup class %s and context class %s.",
 				id,
-				storedLookup.lookupClass.getCanonicalName(),
+				storedLookup.attributeClass.getCanonicalName(),
 				storedLookup.contextClass.getCanonicalName(),
 				attributeClass.getCanonicalName(),
 				contextClass.getCanonicalName()
@@ -68,5 +68,5 @@ public final class AttributeLookupMapImpl<L> implements AttributeLookupMap<L> {
 		return lookups.values().stream().map(storedLookup -> storedLookup.accessor).iterator();
 	}
 
-	private record StoredLookup<L>(L accessor, Class<?> lookupClass, Class<?> contextClass) {}
+	private record StoredLookup<L>(L accessor, Class<?> attributeClass, Class<?> contextClass) {}
 }
