@@ -27,14 +27,11 @@ includeBuild("build-logic")
 
 // Libraries
 library("core")
-library("data")
-
-library("attribute")
 library("block")
-library("command")
 library("data")
 library("gui")
 library("item")
+library("management")
 library("worldgen")
 
 def library(String library) {
