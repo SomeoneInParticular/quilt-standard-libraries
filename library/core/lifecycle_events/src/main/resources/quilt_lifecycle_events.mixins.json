@@ -8,7 +8,11 @@
   ],
   "client": [
     "client.ClientWorldMixin",
-    "client.MinecraftClientMixin"
+    "client.MinecraftClientMixin",
+    "client.WorldChunkMixin"
+  ],
+  "server": [
+    "server.WorldChunkMixin"
   ],
   "injectors": {
     "defaultRequire": 1
