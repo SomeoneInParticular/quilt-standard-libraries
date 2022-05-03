@@ -89,7 +89,8 @@ public interface ItemAttributeLookup<A, C> {
 	/**
 	 * Register a provider to be used when a standard provider cannot be found
 	 * with a provided item. Providers registered this way are checked for all
-	 * queries which fail to a provider for the requested item via the usual way
+	 * queries which fail to find a provider for the requested item via the
+	 * usual way
 	 * @param provider The provider to register
 	 */
 	void registerFallback(ItemAttributeProvider<A, C> provider);
