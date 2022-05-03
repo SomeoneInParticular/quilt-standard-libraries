@@ -126,10 +126,8 @@ abstract class WorldChunkMixin {
 		if (removedBlockEntity != null) {
 			if (this.getWorld() instanceof ServerWorld) {
 				ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.invoker().onLoad(removedBlockEntity, (ServerWorld) this.getWorld());
-				System.out.println("==QSLClient_LoadServer==");
 			} else if (this.getWorld() instanceof ClientWorld) {
 				ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.invoker().onLoad(removedBlockEntity, (ClientWorld) this.getWorld());
-				System.out.println("==QSLClient_LoadClient==");
 			}
 		}
 	}
@@ -142,10 +140,8 @@ abstract class WorldChunkMixin {
 		if (removedBlockEntity != null) {
 			if (this.getWorld() instanceof ServerWorld) {
 				ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.invoker().onUnload(removedBlockEntity, (ServerWorld) this.getWorld());
-				System.out.println("==QSLClient_UnloadServer==");
 			} else if (this.getWorld() instanceof ClientWorld) {
 				ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.invoker().onUnload(removedBlockEntity, (ClientWorld) this.getWorld());
-				System.out.println("==QSLClient_UnloadClient==");
 			}
 		}
 	}
